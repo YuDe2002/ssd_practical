@@ -1,3 +1,4 @@
+cat > .github/workflows/ci.yml << 'EOF'
 name: CI - Integration, Dependency Check, and UI Tests
 
 on:
@@ -20,11 +21,8 @@ jobs:
       - name: Build and start services
         run: |
           docker compose up -d --build
-          # Wait for all services to become healthy
           echo "Waiting for services to be ready..."
-          # You can use a simple loop or wait for healthchecks
           timeout 120 bash -c 'while ! curl -kf https://localhost/; do sleep 2; done'
-          # Also wait for DB (healthcheck handles it)
           docker compose ps
 
       - name: Integration tests (API via HTTPS)
@@ -35,12 +33,10 @@ jobs:
       - name: Dependency vulnerability scan
         run: |
           pip install pip-audit
-          # Scan the exact requirements used by the web service
           pip-audit -r web/requirements.txt
 
       - name: UI tests (Playwright)
         run: |
-          # Install Node.js and Playwright (if using Node) or use Python Playwright
           npm init -y
           npm install playwright @playwright/test
           npx playwright install --with-deps chromium
@@ -49,3 +45,4 @@ jobs:
       - name: Stop services
         if: always()
         run: docker compose down
+EOF
