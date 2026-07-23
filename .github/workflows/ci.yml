@@ -24,7 +24,7 @@ jobs:
 
       - name: Integration tests
         run: |
-          pip install requests
+          pip install requests psycopg2-binary
           python tests/integration_test.py
 
       - name: Dependency check
