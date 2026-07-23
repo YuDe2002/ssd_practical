@@ -36,11 +36,12 @@ jobs:
         run: |
           npm init -y
           npm install eslint eslint-plugin-security
-          npx eslint --ext .js --rule 'security/detect-*: warn' --no-error-on-unmatched-pattern .
+          echo "import security from 'eslint-plugin-security'; export default [security.configs.recommended];" > eslint.config.mjs
+          npx eslint --ext .js .
 
       - name: UI tests (Playwright)
         run: |
-          npm init -y  # re-init is harmless
+          npm init -y
           npm install playwright @playwright/test
           npx playwright install --with-deps chromium
           node tests/ui_test.js
