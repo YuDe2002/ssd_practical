@@ -27,14 +27,20 @@ jobs:
           pip install requests psycopg2-binary
           python tests/integration_test.py
 
-      - name: Dependency check
+      - name: Dependency vulnerability scan (Python)
         run: |
           pip install pip-audit
           pip-audit -r web/requirements.txt
 
-      - name: UI tests
+      - name: ESLint security scan (JavaScript)
         run: |
           npm init -y
+          npm install eslint eslint-plugin-security
+          npx eslint --ext .js --rule 'security/detect-*: warn' --no-error-on-unmatched-pattern .
+
+      - name: UI tests (Playwright)
+        run: |
+          npm init -y  # re-init is harmless
           npm install playwright @playwright/test
           npx playwright install --with-deps chromium
           node tests/ui_test.js
