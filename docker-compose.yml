@@ -9,6 +9,11 @@ services:
       - db
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/password_checker
+    healthcheck:
+      test: ["CMD", "curl", "-kf", "https://localhost/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
 
   db:
@@ -19,6 +24,11 @@ services:
       - POSTGRES_DB=password_checker
     volumes:
       - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
 
   git:
