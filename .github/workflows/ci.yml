@@ -1,4 +1,3 @@
-cat > .github/workflows/ci.yml << 'EOF'
 name: CI - Integration, Dependency Check, and UI Tests
 
 on:
