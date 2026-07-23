@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./web
+    ports:
+      - "443:443"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/password_checker
+    restart: unless-stopped
+
+  db:
+    build: ./db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=password_checker
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  git:
+    image: gitea/gitea:latest
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - GITEA__database__DB_TYPE=postgres
+      - GITEA__database__HOST=db:5432
+      - GITEA__database__NAME=gitea
+      - GITEA__database__USER=postgres
+      - GITEA__database__PASSWD=postgres
+    ports:
+      - "3000:3000"
+      - "2222:22"
+    depends_on:
+      - db
+    volumes:
+      - gitea_data:/data
+    restart: unless-stopped
+
+volumes:
+  db_data:
+  gitea_data:

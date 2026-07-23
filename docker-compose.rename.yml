@@ -1,0 +1,21 @@
+services:
+  gitea-init:
+    image: gitea/gitea:latest
+    depends_on:
+      - git
+    volumes:
+      - gitea_data:/data                    # Mount the same volume as the git service
+    user: git                                # Run as the git user (Gitea’s default)
+    entrypoint: ["/bin/sh", "-c"]
+    command: >
+      "until gitea admin user create
+        --username TeoYuDe
+        --password 'YourStrongPass123!'
+        --email 2402056@sit.singaporetech.edu.sg
+        --admin
+        --config /data/gitea/conf/app.ini;
+      do
+        echo 'Waiting for Gitea to be ready...';
+        sleep 5;
+      done"
+    restart: "no"

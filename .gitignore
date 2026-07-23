@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.env
+venv/
+.venv/
+
+# Docker
+db_data/
+gitea_data/
+
+# IDE
+.vscode/
+.idea/
